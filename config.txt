@@ -8,7 +8,7 @@ approve_requirement = 95
 contact_email_on_error = youremail@gmail.com
 ad_group = Whoops y'all
 psiturk_keywords = whoops
-organization_name = New Great University
+organization_name = CHANGETHISPLEASE
 browser_exclude_rule = MSIE, mobile, tablet
 
 [Database Parameters]
@@ -20,10 +20,10 @@ host = localhost
 port = 22362
 cutoff_time = 30
 logfile = server.log
-loglevel = 2
+loglevel = 1
 debug = true
-login_username = examplename
-login_pw = examplepassword
+login_username = CHANGETHIS
+login_pw = CHANGETHISTOO
 threads = auto
 
 [Task Parameters]

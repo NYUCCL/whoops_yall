@@ -7,12 +7,13 @@ from sqlalchemy import or_
 
 from psiturk.psiturk_config import PsiturkConfig
 from psiturk.experiment_errors import ExperimentError
-from psiturk.user_utils import PsiTurkAuthorization, nocache
+from psiturk.user_utils import PsiTurkAuthorization, nocache, print_to_log
 
 # # Database setup
 from psiturk.db import db_session, init_db
 from psiturk.models import Participant
 from json import dumps, loads
+from custom_models import LegitWorker
 
 # load the configuration options
 config = PsiturkConfig()
@@ -23,50 +24,40 @@ myauth = PsiTurkAuthorization(config)  # if you want to add a password protect r
 custom_code = Blueprint('custom_code', __name__, template_folder='templates', static_folder='static')
 
 
-
 ###########################################################
 #  serving warm, fresh, & sweet custom, user-provided routes
 #  add them here
 ###########################################################
 
 #----------------------------------------------
-# example custom route
-#----------------------------------------------
-@custom_code.route('/my_custom_view')
-def my_custom_view():
-	current_app.logger.info("Reached /my_custom_view")  # Print message to server.log for debugging 
-	try:
-		return render_template('custom.html')
-	except TemplateNotFound:
-		abort(404)
-
-#----------------------------------------------
 # example using HTTP authentication
 #----------------------------------------------
-@custom_code.route('/my_password_protected_route')
+@custom_code.route('/dashboard', methods=['GET','POST'])
 @myauth.requires_auth
-def my_password_protected_route():
-	try:
-		return render_template('custom.html')
-	except TemplateNotFound:
-		abort(404)
+def dashboard():
+    if 'mode' in request.form:
+        if request.form['mode']=='add':
+            if ('workerid' in request.form) and ('bonus' in request.form):
+                newworker = LegitWorker(workerid=request.form['workerid'])
+                newworker.set_bonus(float(request.form['bonus']))
+                db_session.add(newworker)
+                db_session.commit()
+        elif request.form['mode']=='delete':
+            if ('index' in request.form):
+                print_to_log('deleting')
+                lw=LegitWorker.query.filter(LegitWorker.index == int(request.form['index'])).one()
+                db_session.delete(lw)
+                db_session.commit()
+    try:
+        workers = LegitWorker.query.all()
+        return render_template('dashboard.html', workers = workers)
+    except TemplateNotFound:
+        abort(404)
 
-#----------------------------------------------
-# example accessing data
-#----------------------------------------------
-@custom_code.route('/view_data')
-@myauth.requires_auth
-def list_my_data():
-        users = Participant.query.all()
-	try:
-		return render_template('list.html', participants=users)
-	except TemplateNotFound:
-		abort(404)
 
 #----------------------------------------------
 # example computing bonus
 #----------------------------------------------
-
 @custom_code.route('/compute_bonus', methods=['GET'])
 def compute_bonus():
     # check that user provided the correct keys
