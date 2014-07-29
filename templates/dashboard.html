@@ -48,8 +48,32 @@
 						<img id="adlogo" src="{{ server_location }}/static/images/whoops-yall.png" alt="Whoops Y'all" />
 					</div>
 					<div class="col-xs-10">
+
+						{% macro render_field(field) %}
+						  {{ field(**kwargs)|safe }}
+						  {% if field.errors %}
+						    {% for error in field.errors %}
+								<div class="alert alert-warning">{{ error | safe }}</div>
+						    {% endfor %}
+						  {% endif %}
+
+						{% endmacro %}
+
+
+						{% with messages = get_flashed_messages() %}
+						  {% if messages %}
+						    <div class="alert alert-warning">
+						    {% for message in messages %}
+						      {{ message }}
+						    {% endfor %}
+							<button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+						    </div>
+						  {% endif %}
+						{% endwith %}
+
+
 					    <h1><font color="lightblue" style="text-decoration: underline;">Whoops Y'all!</font> Dashboard</h1>
-					    <br>
+					    <hr>
 					    <p>
 					    	Use this page to add new eligible workers to this HIT.  A secret code will
 					    	be automatically generated.  You can use this dashboard to view which workers
@@ -97,7 +121,7 @@
 						</div>
 
 						<br><br>
-
+						<hr>
 						<h3>Status of your reimbursements</h3>
 						<p>
 							This gives a general overview of your reimbursements.
@@ -155,5 +179,9 @@
 		</div>
 
     </body>
+  <!-- Bootstrap core JS -->
+  <script src="/static/js/bootstrap.min.js" charset="utf-8"></script>
+
+
 </html>
 

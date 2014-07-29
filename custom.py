@@ -1,6 +1,6 @@
 # this file imports custom routes into the experiment server
 
-from flask import Blueprint, render_template, request, jsonify, Response, abort, current_app
+from flask import Blueprint, render_template, request, jsonify, Response, abort, current_app, flash
 from jinja2 import TemplateNotFound
 from functools import wraps
 from sqlalchemy import or_
@@ -23,7 +23,6 @@ myauth = PsiTurkAuthorization(config)  # if you want to add a password protect r
 # explore the Blueprint
 custom_code = Blueprint('custom_code', __name__, template_folder='templates', static_folder='static')
 
-
 ###########################################################
 #  serving warm, fresh, & sweet custom, user-provided routes
 #  add them here
@@ -45,9 +44,12 @@ def dashboard():
         elif request.form['mode']=='delete':
             if ('index' in request.form):
                 print_to_log('deleting')
-                lw=LegitWorker.query.filter(LegitWorker.index == int(request.form['index'])).one()
-                db_session.delete(lw)
-                db_session.commit()
+                try:
+                    lw=LegitWorker.query.filter(LegitWorker.index == int(request.form['index'])).one()
+                    db_session.delete(lw)
+                    db_session.commit()
+                except:
+                    flash(u'Sorry, was unable to delete that worker.  Perhaps they were already deleted!', 'error')
     try:
         workers = LegitWorker.query.all()
         return render_template('dashboard.html', workers = workers)
@@ -60,6 +62,10 @@ def dashboard():
 #----------------------------------------------
 @custom_code.route('/compute_bonus', methods=['GET'])
 def compute_bonus():
+    # look up using worker id and secret code to find the bonus
+    # amount.
+
+
     # check that user provided the correct keys
     # errors will not be that gracefull here if being
     # accessed by the Javascrip client
