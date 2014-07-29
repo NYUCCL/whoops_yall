@@ -5,3 +5,5 @@
 /server.log
 
 /.psiturk_history
+
+*.pyc
