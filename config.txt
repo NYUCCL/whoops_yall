@@ -1,13 +1,13 @@
 [HIT Configuration]
-title = Stroop task
-description = Judge the color of a series of words.
-amt_keywords = Perception, Psychology
+title = Compensation HIT for e-mailed workers - All Others will Be Rejected
+description = Compensation for task that had technical problem.  Sorry!
+amt_keywords = Psychology
 lifetime = 24
 us_only = true
 approve_requirement = 95
 contact_email_on_error = youremail@gmail.com
-ad_group = Default psiTurk Stroop Example
-psiturk_keywords = stroop
+ad_group = Whoops y'all
+psiturk_keywords = whoops
 organization_name = New Great University
 browser_exclude_rule = MSIE, mobile, tablet
 
