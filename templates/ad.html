@@ -60,7 +60,7 @@
 				<div class="row">
 					<div class="col-xs-2">
 						<!-- REPLACE THE LOGO HERE WITH YOUR  UNIVERSITY, LAB, or COMPANY -->
-						<img id="adlogo" src="{{ server_location }}/static/images/university.png" alt="Lab Logo" />
+						<img id="adlogo" src="{{ server_location }}/static/images/whoops-yall.png" alt="Lab Logo" />
 					</div>
 					<div class="col-xs-10">
 
@@ -74,22 +74,17 @@
 							-->
 							{% if assignmentid == "ASSIGNMENT_ID_NOT_AVAILABLE" %}
 
-							    <h1>Call for participants</h1>
-							    <p>
-									The XXX Lab at XXXXX University is looking for online participants 
-									for a brief psychology experiment. The only requirements 
-									are that you are at least 18 years old and are a fluent English 
-									speaker.  The task will that XXXXX minutes and will pay XXXXX.
-							    </p>
+							    <h1>Reimbursement for failed HIT</h1>
 							    <div class="alert alert-danger">
-									<strong>This task can only be completed once.</strong> 
-									If you have already completed this task before the system will not 
-									allow you to run again. If this looks familiar please return the 
-									HIT so someone else can participate.
+									<strong>This HIT should only be accepted if you were notified.</strong> 
+									Any work submitted will be rejected unless you have specific permission
+									to accept this HIT and have a received a secret code via correspondence
+									with a requester.
 							    </div>
 							    <p>
-								    Otherwise, please click the "Accept HIT" button on the Amazon site 
-								    above to begin the task.
+								    If you have a code and were invited to this HIT please click the 
+								    "Accept HIT" button on the Amazon site to begin the reimbursement
+								    process.
 								</p>
 							    
 
@@ -107,10 +102,10 @@
 									openwindow() function below if you want you experiment
 									to work.
 								-->
-							    <h1>Thank you for accepting this HIT!</h1>
+							    <h1>Thanks, we're on our way to fix your problem!</h1>
 							    <p>
-							    	By clicking the following URL link, you will be taken to the experiment,
-							        including complete instructions and an informed consent agreement.
+							    	By clicking the following URL link, you will be taken to the reimbursement form
+							    	where you can enter your secret code.
 							    </p>
 							    <script>
 									function openwindow() {
@@ -122,7 +117,7 @@
 							    </div>
 							    
 						    	<button type="button" class="btn btn-primary btn-lg" onClick="openwindow();">
-								  Begin Experiment
+								  Yes, I received a secret code and am entitled to reimbursement.
 								</button>
 
 
