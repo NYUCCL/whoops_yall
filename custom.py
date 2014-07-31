@@ -3,7 +3,7 @@
 from flask import Blueprint, render_template, request, jsonify, Response, abort, current_app, flash
 from jinja2 import TemplateNotFound
 from functools import wraps
-from sqlalchemy import or_
+from sqlalchemy import or_, and_
 
 from psiturk.psiturk_config import PsiturkConfig
 from psiturk.experiment_errors import ExperimentError
@@ -14,6 +14,7 @@ from psiturk.db import db_session, init_db
 from psiturk.models import Participant
 from json import dumps, loads
 from custom_models import LegitWorker
+import datetime
 
 # load the configuration options
 config = PsiturkConfig()
@@ -27,6 +28,16 @@ custom_code = Blueprint('custom_code', __name__, template_folder='templates', st
 #  serving warm, fresh, & sweet custom, user-provided routes
 #  add them here
 ###########################################################
+
+# Status codes
+NOT_ACCEPTED = 0
+ALLOCATED = 1
+STARTED = 2
+COMPLETED = 3
+SUBMITTED = 4
+CREDITED = 5
+QUITEARLY = 6
+BONUSED = 7
 
 #----------------------------------------------
 # example using HTTP authentication
@@ -56,42 +67,37 @@ def dashboard():
     except TemplateNotFound:
         abort(404)
 
-
 #----------------------------------------------
-# example computing bonus
+# verify secret code
 #----------------------------------------------
-@custom_code.route('/compute_bonus', methods=['GET'])
-def compute_bonus():
-    # look up using worker id and secret code to find the bonus
-    # amount.
-
-
-    # check that user provided the correct keys
-    # errors will not be that gracefull here if being
-    # accessed by the Javascrip client
-    if not request.args.has_key('uniqueId'):
-        raise ExperimentError('improper_inputs')  # i don't like returning HTML to JSON requests...  maybe should change this
-    uniqueId = request.args['uniqueId']
+@custom_code.route('/check_secret_code', methods=['POST'])
+def check_secret_code():
+    print_to_log(request.form['workerid'])
+    print_to_log(request.form['code'])
+    uniqueId = request.form['uniqueid']
+    try:
+        worker = LegitWorker.query.filter(and_(LegitWorker.amt_worker_id ==request.form['workerid'], \
+                                    LegitWorker.completion_code == request.form['code'], \
+                                    LegitWorker.status=='owed')).one()
+    except:
+        abort(406)
+    worker.submitted()
+    db_session.add(worker)
+    db_session.commit()
 
     try:
-        # lookup user in database
         user = Participant.query.\
-               filter(Participant.uniqueid == uniqueId).\
-               one()
-        user_data = loads(user.datastring) # load datastring from JSON
-        bonus = 0
-
-        for record in user_data['data']: # for line in data file
-            trial = record['trialdata']
-            if trial['phase']=='TEST':
-                if trial['hit']==True:
-                    bonus += 0.02
-        user.bonus = bonus
+                filter(Participant.uniqueid == uniqueId).one()
+        user.bonus = worker.bonus
+        user.status = COMPLETED
+        user.endhit = datetime.datetime.now()
         db_session.add(user)
         db_session.commit()
-        resp = {"bonusComputed": "success"}
-        return jsonify(**resp)
     except:
-        abort(404)  # again, bad to display HTML, but...
+        abort(406)
+    resp = {"bonus": user.bonus}
+    return jsonify(**resp)
+
+
 
     

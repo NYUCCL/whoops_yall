@@ -1,0 +1,52 @@
+<div id="container-exp">
+
+	<div id="ad">
+		<div class="row">
+			<div class="col-xs-2">
+				<!-- REPLACE THE LOGO HERE WITH YOUR UNIVERSITY, LAB, or COMPANY -->
+				<img id="adlogo" src="{{ server_location }}/static/images/whoops-yall.png" alt="Whoops Y'all" />
+			</div>
+			<div class="col-xs-10">
+
+					    <div class="alert alert-danger badcode">
+							<button type="button" class="close" id="myalert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+
+					    	Error: This code is not correct.  Please try again.  If you continue to have
+					    	difficulty please contact the requester.
+					    </div>
+
+
+					    <h1>Sorry for the technical difficulties!</h1>
+					    
+					    <br>
+					
+					    <p>
+					    	We are very sorry for the difficulty you had in completing
+					    	our previous HIT.  This HIT is used to compensate people
+					    	who had problems.
+					    </p>
+					    <p>
+					    	If you received a link to this HIT, please enter the completion
+					    	code provided to you via email.
+					    </p>
+
+					   	<div class="alert alert-warning" role="alert">
+					    	<b>Warning</b>: All work will be rejected unless you were specifically invited to perform this HIT.
+					    </div>
+						
+					    <div class="well">
+							<div class="input-group input-group-lg">
+							  <span class="input-group-addon">Completion code:</span>
+							  <input id="completecode" type="text" class="form-control" placeholder="Enter the code provided to you via email">
+							</div>
+							<br>
+						    
+					    	<button type="button" class="btn btn-primary btn-lg" onClick="checkcode();">
+							  Submit compensation request
+							</button>
+
+						</div>
+						<br><br>
+			</div>
+	</div>
+</div>

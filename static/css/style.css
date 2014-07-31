@@ -23,7 +23,20 @@ strong {
   color: #ccccff;
 }
 
+.badcode {
+  display: none;
+}
 
+.numberbox {
+  width: 220px;
+  height: 150px;
+}
+
+.bignumber {
+  font-size: 56px;
+  text-align: center;
+  width: 100%;
+}
 /* these are all the same for now, but easy to modify individually */
 #container-ad, #container-error, #container-exp, #container-consent, #container-instructions, #container-questionnaire {
     position: absolute;

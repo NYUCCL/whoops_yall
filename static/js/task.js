@@ -7,10 +7,15 @@
 // Initalize psiturk object
 var psiTurk = new PsiTurk(uniqueId, adServerLoc, mode);
 
-var mycondition = condition;  // these two variables are passed by the psiturk server process
-var mycounterbalance = counterbalance;  // they tell you which condition you have been assigned to
 // they are not used in the stroop code but may be useful to you
 
+// All pages to be loaded
+var pages = [
+	"form.html",
+	"success.html"
+];
+
+psiTurk.preloadPages(pages);
 
 
 /********************
@@ -23,16 +28,54 @@ var mycounterbalance = counterbalance;  // they tell you which condition you hav
 *
 ********************/
 
+checkcodesuccess = function (bonus) {
+	psiTurk.showPage('success.html');
+	d3.select('#bonusamount').select(".bignumber").text('$'+bonus);
+}
 
+checkcodefail = function () {
+	d3.select('.badcode').style("display","inline-block");
+}
+
+checkcode = function() {
+	console.log("checking code");
+
+	var parts = window.location.search.substr(1).split("&");
+	var $_GET = {};
+	for (var i = 0; i < parts.length; i++) {
+	    var temp = parts[i].split("=");
+	    $_GET[decodeURIComponent(temp[0])] = decodeURIComponent(temp[1]);
+	}
+
+
+	$.ajax({
+		dataType: "json",
+		type: "POST",
+		data: {uniqueid: uniqueId, workerid: $_GET['workerId'], code: $("#completecode").val()},
+		url: "/check_secret_code",
+		success: function(data) {
+			checkcodesuccess(data.bonus);
+		},
+		error: function () {
+			checkcodefail();
+		}
+	});
+}
+
+completehit = function() {
+	psiTurk.completeHIT();
+}
 // Task object to keep track of the current phase
 var currentview;
 
 /*******************
  * Run Task
  ******************/
-// $(window).load( function(){
-//     psiTurk.doInstructions(
-//     	instructionPages, // a list of pages you want to display in sequence
-//     	function() { currentview = new StroopExperiment(); } // what you want to do when you are done with instructions
-//     );
-// });
+$(window).load( function(){
+	// Load the stage.html snippet into the body of the page
+	psiTurk.showPage('form.html');
+	$('#myalert').on('click', function () {
+		d3.select('.badcode').style("display","none");
+	});
+
+});
