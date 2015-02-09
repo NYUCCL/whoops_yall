@@ -20,12 +20,14 @@ account on psiturk.org.
 1. `cd whoops_yall` - change to the project folder  
 1. edit `config.txt` to your liking (particular setting `host` to 0.0.0.0 if you plan to run on the public internet, also fill in the `contact_email_on_error`, your university/organization name, etc...) 
 1. edit the `templates/ad.html` file to reflect your university/organization and to identify yourself to workers 
+1. `pip install shortuuid` as a dependency
 
 **Update the database** 
 
 1. `psiturk` - launch psiturk  
 1. `[psiTurk server:off mode:sdbx #HITs:0]$ server on` - start server  
 1. visit http://SERVER/dashboard (e.g., http://localhost:22362/dashboard)
+1. login with the credentials you provided in the config.txt
 1. enter worker ids and bonus amounts
 1. listed below is a status list of where each person got in the reimbursement task.  also listed are "completion codes"... random codes you should send to worker who had problems to identify them uniquely.
 

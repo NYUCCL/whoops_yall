@@ -7,7 +7,7 @@ from sqlalchemy import or_, and_
 
 from psiturk.psiturk_config import PsiturkConfig
 from psiturk.experiment_errors import ExperimentError
-from psiturk.user_utils import PsiTurkAuthorization, nocache, print_to_log
+from psiturk.user_utils import PsiTurkAuthorization, nocache
 
 # # Database setup
 from psiturk.db import db_session, init_db
@@ -54,7 +54,7 @@ def dashboard():
                 db_session.commit()
         elif request.form['mode']=='delete':
             if ('index' in request.form):
-                print_to_log('deleting')
+                current_app.logger.info('deleting')
                 try:
                     lw=LegitWorker.query.filter(LegitWorker.index == int(request.form['index'])).one()
                     db_session.delete(lw)
@@ -72,8 +72,8 @@ def dashboard():
 #----------------------------------------------
 @custom_code.route('/check_secret_code', methods=['POST'])
 def check_secret_code():
-    print_to_log(request.form['workerid'])
-    print_to_log(request.form['code'])
+    current_app.logger.info(request.form['workerid'])
+    current_app.logger.info(request.form['code'])
     uniqueId = request.form['uniqueid']
     try:
         worker = LegitWorker.query.filter(and_(LegitWorker.amt_worker_id ==request.form['workerid'], \
