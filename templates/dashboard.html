@@ -136,6 +136,15 @@
 							AMT site.
 						</p>
 
+						<br>
+						<form id="refresh" action="/dashboard" method="post">
+							<input type="hidden" name="mode" value="refresh">
+								<button type="button" class="btn btn-primary btn-lg" onClick="$('#refresh').submit();">
+									Refresh Paid Status
+							</button>
+						</form>
+						<br>
+
 						<table class="table table-striped">
 							<tr>
 								<th>#</th>
