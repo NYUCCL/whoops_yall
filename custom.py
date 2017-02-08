@@ -61,6 +61,30 @@ def dashboard():
                     db_session.commit()
                 except:
                     flash(u'Sorry, was unable to delete that worker.  Perhaps they were already deleted!', 'error')
+        elif request.form['mode']=='refresh':
+            failed_workers = []
+            workers = LegitWorker.query.all()
+            for w in workers:
+                participant_exists = Participant.query.\
+                        filter(Participant.workerid == w.amt_worker_id).count() > 0
+                if participant_exists:
+                    try:
+                        user = Participant.query.\
+                            filter(Participant.workerid == w.amt_worker_id).one()
+                        if user.status == BONUSED:
+                            w.paid()
+                            db_session.add(w)
+                            db_session.commit()
+                    except Exception as ex:
+                        current_app.logger.error('Could not update worker %s to paid status: %s',
+                                                w.amt_worker_id,
+                                                ex)
+                        failed_workers.append(w.amt_worker_id)
+            if len(failed_workers) > 0:
+                display_str = u'Could not update the following workers:'
+                for w in failed_workers:
+                    display_str += '\n%s'%(w)
+                flash(display_str, 'error')
     try:
         workers = LegitWorker.query.all()
         return render_template('dashboard.html', workers = workers)
