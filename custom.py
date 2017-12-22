@@ -49,10 +49,13 @@ def dashboard():
     if 'mode' in request.form:
         if request.form['mode']=='add':
             if ('workerid' in request.form) and ('bonus' in request.form):
-                newworker = LegitWorker(workerid=request.form['workerid'])
-                newworker.set_bonus(float(request.form['bonus']))
-                db_session.add(newworker)
-                db_session.commit()
+                if (LegitWorker.query.filter(LegitWorker.amt_worker_id == request.form['workerid']).count() == 0):
+                    newworker = LegitWorker(workerid=request.form['workerid'])
+                    newworker.set_bonus(float(request.form['bonus']))
+                    db_session.add(newworker)
+                    db_session.commit()
+                else:
+                    flash('That worker has already been added!', 'error')
         elif request.form['mode']=='delete':
             if ('index' in request.form):
                 current_app.logger.info('deleting')
