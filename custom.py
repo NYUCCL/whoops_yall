@@ -4,6 +4,7 @@ from flask import Blueprint, render_template, request, jsonify, Response, abort,
 from jinja2 import TemplateNotFound
 from functools import wraps
 from sqlalchemy import or_, and_
+from sqlalchemy.orm.exc import NoResultFound
 
 from psiturk.psiturk_config import PsiturkConfig
 from psiturk.experiment_errors import ExperimentError
@@ -61,6 +62,29 @@ def dashboard():
                     db_session.commit()
                 except:
                     flash(u'Sorry, was unable to delete that worker.  Perhaps they were already deleted!', 'error')
+        elif request.form['mode']=='refresh':
+            failed_workers = []
+            workers = LegitWorker.query.all()
+            for lw in workers:
+                try:
+                    user = Participant.query.filter(Participant.workerid == lw.amt_worker_id).one()
+                    if user.status == BONUSED:
+                        try:
+                            lw.paid()
+                            db_session.add(lw)
+                            db_session.commit()
+                        except Exception as ex:
+                            current_app.logger.error('Could not update worker %s to paid status: %s',
+                                                lw.amt_worker_id,
+                                                ex)
+                            failed_workers.append(w.amt_worker_id)  
+                except NoResultFound:
+                    pass # hasn't submitted yet... 
+                if len(failed_workers) > 0:
+                    display_str = u'Could not update the following workers:'
+                    for w in failed_workers:
+                        display_str += '\n%s' % (w)
+                    flash(display_str, 'error')
     try:
         workers = LegitWorker.query.all()
         return render_template('dashboard.html', workers = workers)

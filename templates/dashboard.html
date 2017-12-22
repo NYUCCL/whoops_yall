@@ -132,10 +132,16 @@
 
 						<p>
 							Simply email the 'Completion Code' to a given worker.
-							Along with instructions on how to find you HIT on the
+							Along with instructions on how to find your HIT on the
 							AMT site.
 						</p>
-
+                        
+                        <div><button type='button' class='btn' onClick="$('#refreshStatuses').submit();"><span class='glyphicon glyphicon-refresh'></span> Refresh Statuses</button></div>
+                        <form id='refreshStatuses' action='/dashboard' method='post'>
+                            <input type="hidden" name="mode" value="refresh">
+                        </form>
+                        <br/>
+                        
 						<table class="table table-striped">
 							<tr>
 								<th>#</th>
@@ -158,7 +164,7 @@
 									<td>{{w.index}}</td>
 									<td>{{w.amt_worker_id}}</td>
 									<td>{{w.completion_code}}</td>
-									<td>${{w.bonus}}</td>
+									<td>{{"$%.2f" | format(w.bonus)}}</td>
 									<td>{{w.status}}</td>
 									<td>
 										<button type="button" class="btn btn-default btn-sm" onClick="$('#deleteperson-{{w.index}}').submit();">
