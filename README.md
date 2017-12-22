@@ -36,7 +36,7 @@ account on psiturk.org.
 1. `psiturk` - launch psiturk if it is not already running
 1. `[psiTurk server:off mode:sdbx #HITs:0]$ server on` - start server if not already running
 1. `[psiTurk server:on mode:sdbx #HITs:0]$ debug` - test it locally  (will pop open a browser stepping you through)
-1. `[psiTurk server:on mode:sdbx #HITs:0]$ create hit` - to create the hit on the AMT sandbox
+1. `[psiTurk server:on mode:sdbx #HITs:0]$ hit create` - to create the hit on the AMT sandbox
 1. Test the experiment by finding your listing on the Amazon sandbox (keep in mind the workerId and completion code
 must be valid)
 
