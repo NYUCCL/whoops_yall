@@ -43,7 +43,7 @@ BONUSED = 7
 #----------------------------------------------
 # example using HTTP authentication
 #----------------------------------------------
-@custom_code.route('/dashboard', methods=['GET','POST'])
+@custom_code.route('/whoopsyall_dashboard', methods=['GET','POST'])
 @myauth.requires_auth
 def dashboard():
     if 'mode' in request.form:
@@ -80,9 +80,9 @@ def dashboard():
                             current_app.logger.error('Could not update worker %s to paid status: %s',
                                                 lw.amt_worker_id,
                                                 ex)
-                            failed_workers.append(w.amt_worker_id)  
+                            failed_workers.append(w.amt_worker_id)
                 except NoResultFound:
-                    pass # hasn't submitted yet... 
+                    pass # hasn't submitted yet...
                 if len(failed_workers) > 0:
                     display_str = u'Could not update the following workers:'
                     for w in failed_workers:
@@ -90,7 +90,7 @@ def dashboard():
                     flash(display_str, 'error')
     try:
         workers = LegitWorker.query.all()
-        return render_template('dashboard.html', workers = workers)
+        return render_template('whoopsyall_dashboard.html', workers = workers)
     except TemplateNotFound:
         abort(404)
 
@@ -124,7 +124,3 @@ def check_secret_code():
         abort(406)
     resp = {"bonus": user.bonus}
     return jsonify(**resp)
-
-
-
-    

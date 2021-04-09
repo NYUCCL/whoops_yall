@@ -1,4 +1,5 @@
-from psiturk.db import Base, db_session, init_db
+from psiturk.db import db_session, init_db
+from psiturk.models import Base
 from sqlalchemy import or_, Column, Integer, String, DateTime, Boolean, Float, Text, ForeignKey
 from sqlalchemy.orm import relationship, backref
 import shortuuid

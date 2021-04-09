@@ -15,15 +15,17 @@ var pages = [
 	"success.html"
 ];
 
-psiTurk.preloadPages(pages);
+const init = (async function() {
+	await psiTurk.preloadPages(pages);
+})()
 
 
 /********************
 * HTML manipulation
 *
-* All HTML files in the templates directory are requested 
+* All HTML files in the templates directory are requested
 * from the server when the PsiTurk object is created above. We
-* need code to get those pages from the PsiTurk object and 
+* need code to get those pages from the PsiTurk object and
 * insert them into the document.
 *
 ********************/
@@ -71,7 +73,8 @@ var currentview;
 /*******************
  * Run Task
  ******************/
-$(window).load( function(){
+$(window).on( 'load', async function(){
+	await init;
 	// Load the stage.html snippet into the body of the page
 	psiTurk.showPage('form.html');
 	$('#myalert').on('click', function () {

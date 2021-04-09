@@ -7,3 +7,5 @@
 /.psiturk_history
 
 *.pyc
+
+.venv
