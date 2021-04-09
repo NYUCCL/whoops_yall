@@ -8,6 +8,7 @@ from sqlalchemy.orm.exc import NoResultFound
 
 from psiturk.psiturk_config import PsiturkConfig
 from psiturk.experiment_errors import ExperimentError
+from psiturk.psiturk_exceptions import PsiturkException
 from psiturk.user_utils import PsiTurkAuthorization, nocache
 
 # # Database setup
@@ -20,7 +21,13 @@ import datetime
 # load the configuration options
 config = PsiturkConfig()
 config.load_config()
-myauth = PsiTurkAuthorization(config)  # if you want to add a password protect route use this
+
+username = config.get('Server Parameters', 'login_username')
+password = config.get('Server Parameters', 'login_pw')
+if not username or not password:
+    raise PsiturkException(message='Either login_username or login_pw is blank -- fix this!')
+
+myauth = PsiTurkAuthorization(config)  # if you want to add a password-protect route use this
 
 # explore the Blueprint
 custom_code = Blueprint('custom_code', __name__, template_folder='templates', static_folder='static')
